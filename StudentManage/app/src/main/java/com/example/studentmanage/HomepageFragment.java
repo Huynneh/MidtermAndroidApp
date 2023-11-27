@@ -1,31 +1,25 @@
 package com.example.studentmanage;
 
-import static com.example.studentmanage.R.id.btnLogout;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SettingFragment#newInstance} factory method to
+ * Use the {@link HomepageFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class SettingFragment extends Fragment {
-    private AppCompatButton btnProfile, btnLogout;
-    private FirebaseAuth auth;
-
-
-
+public class HomepageFragment extends Fragment {
+    private AppCompatButton btnSort;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,27 +30,26 @@ public class SettingFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    public HomepageFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
+     * @return A new instance of fragment HomepageFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
+    public static HomepageFragment newInstance(String param1, String param2) {
+        HomepageFragment fragment = new HomepageFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public SettingFragment() {
-        // Required empty public constructor
-        auth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -68,27 +61,34 @@ public class SettingFragment extends Fragment {
         }
     }
 
-    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        btnSort = view.findViewById(R.id.btnSort);
 
-        btnProfile = view.findViewById(R.id.btnProfile);
-        btnProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ProfileActivity.class);
-            startActivity(intent);
-        });
+        btnSort.setOnClickListener(v -> showPopupMenu(v));
 
-        btnLogout = view.findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> {
-            auth.signOut();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-        });
         return view;
     }
 
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+        popupMenu.inflate(R.menu.sort_menu);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menuSortByName) {
+                // Xử lý sự kiện khi người dùng chọn sắp xếp theo tên
+                return true;
+            } else if (itemId == R.id.menuSortByAge) {
+                // Xử lý sự kiện khi người dùng chọn sắp xếp theo điểm số
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        popupMenu.show();
+    }
 }

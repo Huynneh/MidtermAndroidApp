@@ -11,7 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AddNewUserActivity extends AppCompatActivity {
     private ImageView imgBack;
@@ -19,7 +20,9 @@ public class AddNewUserActivity extends AppCompatActivity {
     private RadioGroup radioPos, radioStatus;
     private RadioButton rbtnManager, rbtnStudent, rbtnNormal, rbtnLocked;
     private AppCompatButton btnAddNew;
-//    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +30,15 @@ public class AddNewUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_user);
 
         imgBack = findViewById(R.id.imgBack);
-
         edtAddName = findViewById(R.id.edtAddName);
         edtAddAge = findViewById(R.id.edtAddAge);
         edtAddPhone = findViewById(R.id.edtAddPhone);
-
         radioPos = findViewById(R.id.radioPos);
         radioStatus = findViewById(R.id.radioStatus);
-
         rbtnManager = findViewById(R.id.rbtnManager);
         rbtnStudent = findViewById(R.id.rbtnStudent);
         rbtnNormal = findViewById(R.id.rbtnNormal);
         rbtnLocked = findViewById(R.id.rbtnLocked);
-
         btnAddNew = findViewById(R.id.btnAddNew);
 
         btnAddNew.setOnClickListener(new View.OnClickListener() {
@@ -61,12 +60,20 @@ public class AddNewUserActivity extends AppCompatActivity {
                     final String position = selectedPosRadioButton.getText().toString();
                     final String status = selectedStatusRadioButton.getText().toString();
 
-                    // Tiếp tục xử lý khi thông tin đủ
-                    // ...
+                    database = FirebaseDatabase.getInstance();
+
+                    if (position.equals("Manager")) {
+                        reference = database.getReference("Manager");
+                    } else {
+                        reference = database.getReference("Student");
+                    }
+
+                    UserInfo user = new UserInfo(position, name, age, phone, status, "", "");
+                    reference.child(name).setValue(user);
+
+                    Toast.makeText(AddNewUserActivity.this, "Add new user successfully!", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-
     }
 }

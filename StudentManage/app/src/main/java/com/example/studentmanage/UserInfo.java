@@ -2,14 +2,16 @@ package com.example.studentmanage;
 
 
 public class UserInfo {
-    private String position, name, age, phone, status;
+    private String position, name, age, phone, status, userName, passWord;
 
-    public UserInfo(String position, String name, String age, String phone, String status) {
+    public UserInfo(String position, String name, String age, String phone, String status, String userName, String passWord) {
         this.position = position;
         this.name = name;
         this.age = age;
         this.phone = phone;
         this.status = status;
+        this.userName = name + "@gmail.com";
+        this.passWord = "pass" + phone;
     }
 
     public String getPosition() {
@@ -50,5 +52,21 @@ public class UserInfo {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
     }
 }
